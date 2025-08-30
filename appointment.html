@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Appointment Booking</title>
+  <style>
+    :root {
+      --primary-color: #83358F;
+      --bg-color: #f9f9f9;
+      --border-color: #ddd;
+      --font-color: #333;
+    }
+
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background-color: var(--bg-color);
+      color: var(--font-color);
+      padding: 20px;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+.logo {
+  width: 200px;   /* smaller size (you can tweak this) */
+  height: auto;  /* keeps proportions */
+  display: block;
+  margin: 0 auto 20px; /* center logo and add space below */
+}
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: var(--primary-color);
+    }
+
+    .customer-tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 25px;
+      gap: 10px;
+    }
+
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px 16px;
+      border-radius: 8px;
+      background-color: #e0e0e0;
+      color: #333;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+      border: 2px solid transparent;
+    }
+
+    .tab.active {
+      background-color: var(--primary-color);
+      color: #fff;
+      border-color: var(--primary-color);
+      box-shadow: 0 4px 10px rgba(131, 53, 143, 0.3);
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    input[type="text"], input[type="tel"], select, input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    input[type="text"]:focus, input[type="tel"]:focus, select:focus, input[type="date"]:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 5px rgba(131, 53, 143, 0.4);
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+    }
+
+    .time-range {
+      margin: 15px 0;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .time-range label {
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .slots-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .slot {
+      background-color: #fff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      flex: 0 0 100px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slot:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+
+    .slot.selected {
+      background-color: var(--primary-color);
+      color: white;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 8px rgba(131, 53, 143, 0.4);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    /* ✅ Confirm Button */
+    button {
+      background-color: var(--primary-color);
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      background-color: #6a2775;
+      box-shadow: 0 4px 12px rgba(131, 53, 143, 0.4);
+    }
+
+    button:active {
+      transform: scale(0.96);
+      background-color: #521c5a;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- ✅ Logo -->
+    <img src="images/aayushcarelogowhite.jpg" alt="Aayush Care Logo" class="logo">
+
+    <h2>Book Appointment</h2>
+    <div class="customer-tabs">
+      <div class="tab active" data-type="new">New Patient</div>
+      <div class="tab" data-type="old">Follow Up</div>
+    </div>
+
+<!-- ✅ New Patient Section -->
+<div class="section" id="newCustomerSection">
+  <label>Name:
+    <input type="text" id="newName" placeholder="Enter full name" />
+  </label>
+  <label>Contact No:
+    <input type="tel" id="newContact" placeholder="Enter contact number" />
+  </label>
+  <label>Place:
+    <input type="text" id="newPlace" placeholder="Enter place" />
+  </label>
+
+ <label>Preferred Language:
+    <input type="text" id="newLanguage" placeholder="Enter preferred language" />
+  </label>
+
+  <!-- ✅ How did you hear about us -->
+  <label>How did you hear about us?:
+    <select id="newReferral">
+      <option value="">-- Select Option --</option>
+      <option value="social_media">Social Media</option>
+      <option value="friend_family">Referred by Friend/Family</option>
+      <option value="doctor_referral">Doctor Referral</option>
+      <option value="google">Google Search</option>
+      <option value="walkin">Walk-in</option>
+      <option value="other">Other</option>
+    </select>
+  </label>
+
+  <label>Mode of Appointment:</label>
+  <div class="radio-group">
+    <label><input type="radio" name="modeNew" value="online"> Online</label>
+    <label><input type="radio" name="modeNew" value="offline"> Offline</label>
+  </div>
+</div>
+
+<!-- ✅ Old Customer Section -->
+<div class="section hidden" id="oldCustomerSection">
+  <label>Enter Patient ID:
+    <input type="text" id="customerId" placeholder="E.g., 12345ABC" />
+    <div id="patientNameDisplay" class="hidden" style="margin-top: 10px; font-weight: bold;"></div>
+  </label>
+
+  <label>Mode of Appointment:</label>
+  <div class="radio-group">
+    <label><input type="radio" name="modeOld" value="online"> Online</label>
+    <label><input type="radio" name="modeOld" value="offline"> Offline</label>
+  </div>
+</div>
+
+    <label>Select Date:
+      <input type="date" id="appointmentDate" />
+    </label>
+
+    <!-- ✅ Time Range Selection -->
+    <div id="timeRangeSection" class="section hidden">
+      <h4>Select Time Range:</h4>
+      <div class="time-range">
+        <label><input type="radio" name="timeRange" value="morning"> Morning (9:00 AM – 12:30 PM)</label>
+        <label><input type="radio" name="timeRange" value="afternoon"> Afternoon (12:45 PM – 5:00 PM)</label>
+        <label><input type="radio" name="timeRange" value="evening"> Evening (5:15 PM – 9:00 PM)</label>
+      </div>
+    </div>
+
+    <div class="section hidden" id="slotSection">
+      <h4>Available Slots:</h4>
+      <div id="slotsContainer" class="slots-grid"></div>
+    </div>
+
+  </div>
+
+<script>
+  let selectedCustomerType = "new";
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const tabs = document.querySelectorAll('.tab');
+    const newCustomerSection = document.getElementById('newCustomerSection');
+    const oldCustomerSection = document.getElementById('oldCustomerSection');
+    const slotSection = document.getElementById('slotSection');
+    const slotsContainer = document.getElementById('slotsContainer');
+    const patientNameDisplay = document.getElementById("patientNameDisplay");
+
+    oldCustomerSection.classList.add("hidden");
+    slotSection.classList.add("hidden");
+
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        tab.classList.add("active");
+
+        selectedCustomerType = tab.dataset.type;
+
+        if (selectedCustomerType === "old") {
+          newCustomerSection.classList.add("hidden");
+          oldCustomerSection.classList.remove("hidden");
+          patientNameDisplay.classList.remove("hidden");
+        } else {
+          newCustomerSection.classList.remove("hidden");
+          oldCustomerSection.classList.add("hidden");
+          patientNameDisplay.classList.add("hidden");
+          patientNameDisplay.textContent = "";
+        }
+
+        slotSection.classList.add("hidden");
+        slotsContainer.innerHTML = "";
+      });
+    });
+  });
+</script>
+
+<!-- ✅ Patient Name Fetcher -->
+<script>
+  const customerIdInput = document.getElementById("customerId");
+  const patientNameDisplay = document.getElementById("patientNameDisplay");
+  let debounceTimer;
+
+  customerIdInput?.addEventListener("input", () => {
+    clearTimeout(debounceTimer);
+    const patientId = customerIdInput.value.trim();
+    if (!patientId) {
+      patientNameDisplay.textContent = "";
+      return;
+    }
+    debounceTimer = setTimeout(() => {
+      if (selectedCustomerType === "old") {
+        fetchPatientName(patientId);
+      }
+    }, 500);
+  });
+
+  async function fetchPatientName(patientId) {
+    patientNameDisplay.textContent = "Checking...";
+    try {
+      const response = await fetch(`http://51.20.128.7/api/resource/Patient/${patientId}`, {
+        method: "GET",
+        headers: {
+          "Authorization": "token 7897c339c442e4b:01ff7013b92aa32"
+        }
+      });
+      if (!response.ok) throw new Error("Not found");
+      const result = await response.json();
+      const data = result?.data;
+      const name = data?.patient_name;
+      const addressLine2 = data?.custom_address_line_2;
+      if (name) {
+        let html = `Patient Name: ${name}`;
+        if (addressLine2) {
+          html += `<br>Place: ${addressLine2}`;
+        }
+        patientNameDisplay.innerHTML = html;
+      } else {
+        patientNameDisplay.textContent = "Patient name not found.";
+      }
+    } catch (error) {
+      patientNameDisplay.textContent = "Patient not found or error.";
+    }
+  }
+</script>
+
+<!-- ✅ Time Range & Slot Display -->
+<script>
+  const appointmentDateInput = document.getElementById('appointmentDate');
+  const slotsContainer = document.getElementById('slotsContainer');
+  const slotSection = document.getElementById('slotSection');
+  const timeRangeSection = document.getElementById('timeRangeSection');
+  const timeRangeInputs = document.getElementsByName('timeRange');
+  let selectedSlot = null;
+
+  appointmentDateInput.addEventListener("change", () => {
+    if (appointmentDateInput.value) {
+      timeRangeSection.classList.remove("hidden");
+      slotSection.classList.add("hidden");
+      slotsContainer.innerHTML = "";
+      timeRangeInputs.forEach(input => input.checked = false);
+    } else {
+      timeRangeSection.classList.add("hidden");
+      slotSection.classList.add("hidden");
+    }
+  });
+
+  timeRangeInputs.forEach(input => {
+    input.addEventListener("change", () => {
+      if (!appointmentDateInput.value) return;
+
+      let startHour, startMinute, endHour, endMinute;
+
+      switch (input.value) {
+        case "morning":
+          startHour = 9; startMinute = 0;
+          endHour = 12; endMinute = 30;
+          break;
+        case "afternoon":
+          startHour = 12; startMinute = 45;
+          endHour = 17; endMinute = 0;
+          break;
+        case "evening":
+          startHour = 17; startMinute = 15;
+          endHour = 21; endMinute = 0;
+          break;
+      }
+
+      slotSection.classList.remove("hidden");
+      slotsContainer.innerHTML = "";
+      selectedSlot = null;
+
+      const slots = generateSlots(startHour, startMinute, endHour, endMinute, 15);
+      slots.forEach(time => {
+        const div = document.createElement("div");
+        div.className = "slot";
+        div.textContent = time;
+
+        div.addEventListener("click", () => {
+          document.querySelectorAll(".slot").forEach(s => s.classList.remove("selected"));
+          div.classList.add("selected");
+          selectedSlot = time;
+          console.log("Selected Slot:", selectedSlot);
+        });
+
+        slotsContainer.appendChild(div);
+      });
+    });
+  });
+
+  function generateSlots(startHour, startMinute, endHour, endMinute, intervalMinutes) {
+    let slots = [];
+    let start = new Date();
+    start.setHours(startHour, startMinute, 0, 0);
+
+    let end = new Date();
+    end.setHours(endHour, endMinute, 0, 0);
+
+    while (start <= end) {
+      let hours = start.getHours();
+      let minutes = start.getMinutes();
+      let ampm = hours >= 12 ? "PM" : "AM";
+      let displayHours = hours % 12 || 12;
+      let displayMinutes = minutes.toString().padStart(2, "0");
+      slots.push(`${displayHours}:${displayMinutes} ${ampm}`);
+      start.setMinutes(start.getMinutes() + intervalMinutes);
+    }
+    return slots;
+  }
+</script>
+</body>
+</html>
